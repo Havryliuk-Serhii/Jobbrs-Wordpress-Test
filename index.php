@@ -1,3 +1,4 @@
+<?php get_header(); ?>
 <article class="content">
   <section class="post">
     <h2 class="post-title">Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor</h2>
@@ -24,4 +25,9 @@
                         </ul>
                     </nav>
                 </section>
+<?php jobbrs_pagination(); ?>
+
 </article>
+<?php get_sidebar();
+      get_footer();
+ ?>
