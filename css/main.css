@@ -30,14 +30,12 @@ p{
 .nav-link{
 	color: #fff;
 }
-
 .hero{
 	width: 100%;
 	height: 480px;
 	position: absolute;
 	left: 0;
-	top: 0;
-	
+	top: 0;	
 }
 .hero img{
 	width: 100%;
@@ -54,4 +52,10 @@ main{
 	position: relative;
 	top: 480px;
 	padding: 20px;
+}
+.post{
+	padding: 40px 65px;
+}
+.post-title{
+	width: 80%;
 }

@@ -1,3 +1,5 @@
+		</div>
+	</div>
 </main>
 <footer class="footer" role="contentinfo">
 	<div class="container">
