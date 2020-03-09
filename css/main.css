@@ -2,6 +2,9 @@ html,
 body{
 	
 }
+body{
+	font-family: 'Roboto', sans-serif;
+}
 h1{
 	font-family: 'Karla', sans-serif;
 	font-size: 80px;
@@ -52,10 +55,19 @@ main{
 	position: relative;
 	top: 480px;
 	padding: 20px;
+	flex-grow: 1;
 }
 .post{
 	padding: 40px 65px;
 }
 .post-title{
 	width: 80%;
+}
+.footer{
+	padding-top: 1.25em;
+	height: 4em;
+}
+.footer-link{
+	color: #fff;
+	margin-left: 10px;
 }
