@@ -21,7 +21,7 @@
             <![endif]-->
         <?php wp_head(); ?>
     </head>
-    <body <?php body_class(); ?>>
+    <body <?php body_class(); ?>>     
         <header class="header" role="banner">
             <nav class="navbar navbar-expand-lg sticky-top" id="nav">
                 <button class="navbar-toggler" data-target="#my-nav" data-toggle="collapse" aria-controls="my-nav"  aria-expanded="false" aria-label="Toggle navigation">
@@ -52,9 +52,8 @@
                 </div>      
             </div>
         </header>
-        <main  class="main" role="main">
-            <div class="container">  
-                <div class="row">
+        <main  class="container" role="main">
+            <div class="row">
 
 
 

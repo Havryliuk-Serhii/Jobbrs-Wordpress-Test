@@ -128,11 +128,29 @@ function filter_menu_id(){
 **/
 require get_template_directory() . '/inc/template-tags.php';
 
+/**
+ * Custom avatar
+**/
+add_filter( 'avatar_defaults', 'setnew_gravatar' );
+ 
+function setnew_gravatar ($avatar_defaults) {
+	$myavatar = get_template_directory_uri() . 'img/avatar.png';	
+	$avatar_defaults[$myavatar] = "Custom avatar";
+	return $avatar_defaults;
+}
+
+/**
+ * Custom link 'Read More'
+**/
+add_filter( 'excerpt_more', 'new_excerpt_more' );
+function new_excerpt_more( $more ){
+	global $post;
+	return '<br/><a class="read-more" href="'. get_permalink($post) . '">Read More</a>';
+}
 
 /**
  *  Pagination
- **/
-
+**/
 function jobbrs_pagination( $args = array() ) {
     
     $defaults = array(

@@ -5,12 +5,12 @@
         while ( have_posts() ) : the_post(); 
           get_template_part( 'template-parts/content', get_post_type() );
         endwhile; ?>
-        <section class="page-pagination">
-          <h3 class="title-hidden"><?php esc_html_e('Pagination','jobbrs' ) ?></h3>
-            <nav aria-label="page navigation">
+        <section class="section-pagination">
+          <h3 class="title-hidden"><?php esc_html_e('Pagination','jobbrs' ) ?></h3>            
+        </section>
+        <nav aria-label="page navigation">
               <?php jobbrs_pagination(); ?>
             </nav>
-        </section>
         <?php else :
           get_template_part( 'template-parts/content', 'none' );
         endif;
