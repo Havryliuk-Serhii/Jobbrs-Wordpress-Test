@@ -221,3 +221,19 @@ function jobbrs_pagination( $args = array() ) {
     if ( isset($echo) )
         echo $args['before_output'] . $echo . $args['after_output'];
 }
+
+/**
+ *  Widget area
+**/
+function jobbrs_widgets_init() {
+	register_sidebar( array(
+		'name'          => esc_html__( 'Sidebar', 'jobbrs' ),
+		'id'            => 'sidebar-area',
+		'description'   => esc_html__( 'Add widgets here.', 'jobbrs' ),
+		'before_widget' => '<section id="%1$s" class="widget %2$s">',
+		'after_widget'  => '</section>',
+		'before_title'  => '<h2 class="widget-title">',
+		'after_title'   => '</h2>',
+	) );
+}
+add_action( 'widgets_init', 'jobbrs_widgets_init' );
