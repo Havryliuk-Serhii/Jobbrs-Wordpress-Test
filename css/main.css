@@ -16,6 +16,10 @@ h1{
 p{
 	font-family: 'Roboto', sans-serif;
 }
+
+/********************
+	Navigation
+********************/
 .nav-item a:link,
 .nav-item a:visited{
 	border: none;
@@ -33,6 +37,10 @@ p{
 .nav-link{
 	color: #fff;
 }
+
+/********************
+	Header image
+********************/
 .hero{
 	width: 100%;
 	height: 480px;
@@ -51,11 +59,14 @@ p{
 .lead{
 	color: #fff;
 }
+/********************
+	Content page
+********************/
 main{
 	position: relative;
 	top: 480px;
 	padding: 20px;
-	flex-grow: 1;
+
 }
 .post{
 	padding: 40px 65px;
@@ -63,6 +74,48 @@ main{
 .post-title{
 	width: 80%;
 }
+/********************
+	Pagination
+********************/
+.title-hidden{
+	display: none;
+}
+.pagination{
+	display: -webkit-flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: -o-flex;
+	display: flex;
+	-webkit-flex-direction: row;
+	-moz-flex-direction: row;
+	-ms-flex-direction: row;
+	-o-flex-direction: row;
+	flex-direction: row;
+	justify-content: flex-end;
+}
+.pagination li{
+	margin: 5px;
+}
+.pagination li>a{
+	font-size: 14px;
+	color: #000;
+	text-decoration: none;	
+}
+.pagination li>a:hover{
+	color: #85fdc8;
+	font-size: 14px;
+}
+.pagination li>a: active{
+	color: #85fdc8;
+	font-size: 14px;
+}
+li .active{
+	color: #85fdc8;
+	font-size: 14px;
+}
+/********************
+	Footer
+********************/
 .footer{
 	padding-top: 1.25em;
 	height: 4em;

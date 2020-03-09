@@ -123,6 +123,10 @@ function filter_menu_id(){
     return; 
 }
 
+/**
+ * Custom template tags for this theme.
+**/
+require get_template_directory() . '/inc/template-tags.php';
 
 
 /**
@@ -134,8 +138,8 @@ function jobbrs_pagination( $args = array() ) {
     $defaults = array(
         'range'           => 4,
         'custom_query'    => false,
-        'previous_string' => __( '«', 'jobbrs' ),
-        'next_string'     => __( '»', 'jobbrs' ),
+        'previous_string' => __( 'PREVIOUS', 'jobbrs' ),
+        'next_string'     => __( 'NEXT', 'jobbrs' ),
         'before_output'   => '<div class="text-center"><ul class="pagination">',
         'after_output'    => '</ul></div>'
     );
