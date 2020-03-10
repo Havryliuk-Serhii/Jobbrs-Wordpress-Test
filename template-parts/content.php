@@ -12,27 +12,17 @@
 		endif;
 	?>
 	<div class="post-head">
-		<?php echo get_avatar(get_the_author_meta('user_email'),'30'); ?>	
-		<span class="author"><?php the_author(); ?></span>
-	</div>    
-    <div class="post-content">  	
-      	<?php the_excerpt(); ?>
 		
+		<span class="author"><?php the_author(); ?></span>
+	</div>
+    <div class="post-content">
+      	<?php the_excerpt(); ?>
 	<?php if ( '' !== get_the_post_thumbnail() && ! is_single() ) : ?>
 		<div class="post-thumbnail">
 			<a href="<?php the_permalink(); ?>">
 				<?php the_post_thumbnail(); ?>
 			</a>
 		</div>
-	<?php endif; ?>        	
-    </div>   
+	<?php endif; ?>
+    </div>
 </section>
-  
-              
-     
-
-
-
-	
-
-	

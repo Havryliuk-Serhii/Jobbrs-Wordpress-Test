@@ -21,14 +21,14 @@
             <![endif]-->
         <?php wp_head(); ?>
     </head>
-    <body <?php body_class(); ?>>     
+    <body <?php body_class(); ?>>
         <header class="header" role="banner">
             <nav class="navbar navbar-expand-lg sticky-top" id="nav">
                 <button class="navbar-toggler" data-target="#my-nav" data-toggle="collapse" aria-controls="my-nav"  aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"><i class="fas fa-bars"></i></span>
-                </button> 
+                </button>
                 <div id="my-nav" class="collapse navbar-collapse">
-                    <?php 
+                    <?php
                         wp_nav_menu( [
                               'theme_location' => 'primary',
                               'container' => false,
@@ -42,19 +42,16 @@
                     ?>
                 </div>
             </nav>
+            <?php $page_description = get_post_meta( 12, 'page_description', true ); ?>
             <div class="hero">
-                <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/img/hero.png" alt="header background">
+                <img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/img/hero.png" alt="header background">
                 <div class="page-title position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center">
                     <div class="col-md-5 p-lg-5 mx-auto my-5">
                         <h1 class="font-weight-normal"><?php echo wp_get_document_title(); ?></h1>
-                        <p class="lead font-weight-normal"><?php the_field('page-description'); ?></p>        
+                        <p class="lead font-weight-normal"><?php echo $page_description; ?></p>
                     </div>
-                </div>      
+                </div>
             </div>
         </header>
         <main  class="container" role="main">
             <div class="row">
-
-
-
-      

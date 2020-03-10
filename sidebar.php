@@ -12,4 +12,3 @@ if ( ! is_active_sidebar( 'sidebar-area' ) ) {
 		<?php dynamic_sidebar( 'sidebar-area' ); ?>
 	</aside>
 </div>
-

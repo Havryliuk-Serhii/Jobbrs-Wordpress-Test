@@ -2,17 +2,34 @@
 <div class="col-lg-8 col-md-8 col-sm-12 col-12">
   <article class="content">
     <?php if ( have_posts() ) :
-        while ( have_posts() ) : the_post(); 
-          get_template_part( 'template-parts/content', get_post_type() );
-        endwhile; ?>
-        <section class="section-pagination">
-          <h3 class="title-hidden"><?php esc_html_e('Pagination','jobbrs' ) ?></h3>            
+        while ( have_posts() ) : the_post(); ?>
+        <section id="post-<?php the_ID(); ?>" <?php post_class('post'); ?>>
+          <h2 class="post-title"><a href="<?php  esc_url( the_permalink()) ;?>" rel="bookmark"><?php the_title( ) ?></a></h2>
+          <div class="post-head">
+
+             <span class="author"><?php the_author(); ?></span>
+          </div>
+          <div class="post-content">
+             <?php the_excerpt(); ?>
+             <?php if ( '' !== get_the_post_thumbnail() && ! is_single() ) : ?>
+                      <div class="post-thumbnail">
+                          <a href="<?php the_permalink(); ?>">
+                               <?php the_post_thumbnail(); ?>
+                          </a>
+                      </div>
+            <?php endif; ?>
+          </div>
         </section>
-        <nav aria-label="page navigation">
-              <?php jobbrs_pagination(); ?>
-            </nav>
+
+        <?php endwhile; ?>
+        <section class="section-pagination">
+            <h3 class="title-hidden"><?php esc_html_e('Pagination','jobbrschildtheme' ) ?></h3>
+            <nav aria-label="page navigation">
+                  <?php jobbrschildtheme_pagination(); ?>
+                </nav>
+          </section>
         <?php else :
-          get_template_part( 'template-parts/content', 'none' );
+         esc_html_e('No posts found.','jobbrschildtheme' ) ;
         endif;
     ?>
   </article>

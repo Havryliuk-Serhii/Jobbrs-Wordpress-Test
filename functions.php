@@ -1,11 +1,10 @@
 <?php
-	show_admin_bar(false);
-
-if ( ! function_exists( 'jobbrs_setup' ) ) :
-	function jobbrs_setup() {
+show_admin_bar(false);
+if ( ! function_exists( 'jobbrschildtheme_setup' ) ) :
+	function jobbrschildtheme_setup() {
 		add_theme_support( 'post-thumbnails' );
 		register_nav_menus( array(
-			'primary' => esc_html__( 'Primary', 'jobbrs' ),
+			'primary' => esc_html__( 'Primary', 'jobbrschildtheme' ),
 		) );
 		add_theme_support( 'html5', array(
 			'search-form',
@@ -14,40 +13,107 @@ if ( ! function_exists( 'jobbrs_setup' ) ) :
 			'gallery',
 			'caption',
 		) );
-	}		
+	}
 endif;
-add_action( 'after_setup_theme', 'jobbrs_setup' );
-
-function jobbrs_scripts() {
-
-// Load our main stylesheet.
-	wp_enqueue_style('style', get_stylesheet_uri());
-	wp_enqueue_style('jobbrs-fonts', 'https://fonts.googleapis.com/css?family=Karla|Roboto:300,400,700&display=swap');
-    wp_enqueue_style('style-grid-bootstrap', get_stylesheet_directory_uri() . '/css/bootstrap-grid.min.css');
-    wp_enqueue_style('style-reboot-bootstrap', get_stylesheet_directory_uri() . '/css/bootstrap-reboot.min.css');
- 	wp_enqueue_style('style-bootstrap', get_stylesheet_directory_uri() . '/css/bootstrap.min.css');
- 	wp_enqueue_style('main-style', get_stylesheet_directory_uri() . '/css/main.css');
-// Load our main script.
-    wp_enqueue_script( 'jquery-my',  get_template_directory_uri() . '/js/jquery-3.4.1.min.js', array(),'3.4.1', true);
-    wp_enqueue_script('bundle-js', get_template_directory_uri() . '/js/bootstrap.bundle.min.js', array(), false, true);
-    wp_enqueue_script('bootstrap-js', get_template_directory_uri() . '/js/bootstrap.min.js', array(), false, true);
-}
-add_action('wp_enqueue_scripts', 'jobbrs_scripts');
+add_action( 'after_setup_theme', 'jobbrschildtheme_setup' );
 
 /**
- * Delete the site name at the end of the title
+  *	Add styles and scripts
 **/
-add_filter( 'document_title_parts', function( $parts ){
+add_action( 'wp_enqueue_scripts', 'jobbrschildtheme_scripts' );
+function jobbrschildtheme_scripts() {
+    // Load our main stylesheet.
+    $parent_style = 'parent-style';
+    wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );
+    wp_enqueue_style( 'child-style', get_stylesheet_directory_uri() . '/style.css', array( $parent_style ), wp_get_theme()->get('Version') );
+    wp_enqueue_style('jobbrschildtheme-fonts', 'https://fonts.googleapis.com/css?family=Karla|Roboto:300,400,700&display=swap');
+    wp_enqueue_style('style-grid-bootstrap', get_stylesheet_directory_uri() . '/css/bootstrap-grid.min.css');
+    wp_enqueue_style('style-reboot-bootstrap', get_stylesheet_directory_uri() . '/css/bootstrap-reboot.min.css');
+    wp_enqueue_style('style-bootstrap', get_stylesheet_directory_uri() . '/css/bootstrap.min.css');
+    wp_enqueue_style('main-style', get_stylesheet_directory_uri() . '/css/main.css');
+    // Load our main script.
+    wp_enqueue_script( 'jquery-my',  get_stylesheet_directory_uri() . '/js/jquery-3.4.1.min.js', array(),'3.4.1', true);
+    wp_enqueue_script('bundle-js', get_stylesheet_directory_uri() . '/js/bootstrap.bundle.min.js', array(), false, true);
+    wp_enqueue_script('bootstrap-js', get_stylesheet_directory_uri() . '/js/bootstrap.min.js', array(), false, true);
+}
 
-	if( isset($parts['site']) ) unset($parts['site']);
+/**
+  *	Add custom post type "News"
+**/
+add_action( 'init', 'jobbrschildtheme_post_type' );
+function jobbrschildtheme_post_type() {
+	register_taxonomy('newscat', array('news'), array(
+		'label'                 => 'News category',
+		'labels'                => array(
+			'name'              => 'News categories',
+			'singular_name'     => 'News category',
+			'search_items'      => 'Search news category',
+			'all_items'         => 'All news categories',
+			'parent_item'       => 'Parent news category',
+			'parent_item_colon' => 'Parent news category:',
+			'edit_item'         => 'Edit news category',
+			'update_item'       => 'Update news category',
+			'add_new_item'      => 'Add news category',
+			'new_item_name'     => 'New news category',
+			'menu_name'         => 'News category',
+		),
+		'description'           => 'News category headings',
+		'public'                => true,
+		'show_in_nav_menus'     => false,
+		'show_ui'               => true,
+		'show_tagcloud'         => false,
+		'hierarchical'          => true,
+		'rewrite'               => array('slug'=>'news', 'hierarchical'=>false, 'with_front'=>false, 'feed'=>false ),
+		'show_admin_column'     => true,
+	) );
+	register_post_type('news', array(
+		'label'               => 'News',
+		'labels'              => array(
+			'name'          => 'News',
+			'singular_name' => 'News',
+			'menu_name'     => 'News',
+			'all_items'     => 'All news',
+			'add_new'       => 'Add news',
+			'add_new_item'  => 'Add new news',
+			'edit'          => 'Edit',
+			'edit_item'     => 'Edit news',
+			'new_item'      => 'New news',
+		),
+		'description'         => '',
+		'public'              => true,
+		'publicly_queryable'  => true,
+		'show_ui'             => true,
+		'show_in_rest'        => false,
+		'rest_base'           => '',
+		'show_in_menu'        => true,
+    'menu_position'       => 9,
+    'menu_icon'           => 'dashicons-format-chat',
+		'exclude_from_search' => false,
+		'capability_type'     => 'post',
+		'map_meta_cap'        => true,
+		'hierarchical'        => false,
+		'rewrite'             => array( 'slug'=>'news/%newscat%', 'with_front'=>false, 'pages'=>false, 'feeds'=>false, 'feed'=>false ),
+		'has_archive'         => 'news',
+		'query_var'           => true,
+		'supports'            => array( 'title','editor','author','thumbnail','comments', 'page-attributes', 'post-formats' ),
+		'taxonomies'          => array( 'newscat' ),
+	) );
+}
+add_filter('post_type_link', 'news_permalink', 1, 2);
+function news_permalink( $permalink, $post ){
+	if( strpos($permalink, '%newscat%') === false )
+		return $permalink;
+	$terms = get_the_terms($post, 'newscat');
+	if( ! is_wp_error($terms) && !empty($terms) && is_object($terms[0]) )
+		$term_slug = array_pop($terms)->slug;
+		else
+		$term_slug = 'no-newscat';
+	return str_replace('%newscat%', $term_slug, $permalink );
+}
 
-	return $parts;
-});
-
-/** 
+/**
  * Bootstrap Walker Nav menu
 **/
-
 class Bootstrap_Menu_Walker extends Walker_Nav_Menu {
 
     function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
@@ -117,27 +183,20 @@ class Bootstrap_Menu_Walker extends Walker_Nav_Menu {
 add_filter('nav_menu_item_id', 'filter_menu_id');
 add_filter( 'nav_menu_css_class', 'filter_menu_li' );
 function filter_menu_li(){
-    return array('');   
+    return array('');
 }
 function filter_menu_id(){
-    return; 
+    return;
 }
-
 /**
- * Custom template tags for this theme.
+ * Delete the site name at the end of the title
 **/
-require get_template_directory() . '/inc/template-tags.php';
+add_filter( 'document_title_parts', function( $parts ){
 
-/**
- * Custom avatar
-**/
-add_filter( 'avatar_defaults', 'setnew_gravatar' );
- 
-function setnew_gravatar ($avatar_defaults) {
-	$myavatar = get_template_directory_uri() . 'img/avatar.png';	
-	$avatar_defaults[$myavatar] = "Custom avatar";
-	return $avatar_defaults;
-}
+	if( isset($parts['site']) ) unset($parts['site']);
+
+	return $parts;
+});
 
 /**
  * Custom link 'Read More'
@@ -151,35 +210,35 @@ function new_excerpt_more( $more ){
 /**
  *  Pagination
 **/
-function jobbrs_pagination( $args = array() ) {
-    
+function jobbrschildtheme_pagination( $args = array() ) {
+
     $defaults = array(
         'range'           => 4,
         'custom_query'    => false,
-        'previous_string' => __( 'PREVIOUS', 'jobbrs' ),
-        'next_string'     => __( 'NEXT', 'jobbrs' ),
+        'previous_string' => __( 'PREVIOUS', 'jobbrschildtheme' ),
+        'next_string'     => __( 'NEXT', 'jobbrschildtheme' ),
         'before_output'   => '<div class="text-center"><ul class="pagination">',
         'after_output'    => '</ul></div>'
     );
-    
-    $args = wp_parse_args( 
-        $args, 
-        apply_filters( 'jobbrs_pagination_defaults', $defaults )
+
+    $args = wp_parse_args(
+        $args,
+        apply_filters( 'jobbrschildtheme_pagination_defaults', $defaults )
     );
-    
+
     $args['range'] = (int) $args['range'] - 1;
     if ( !$args['custom_query'] )
         $args['custom_query'] = @$GLOBALS['wp_query'];
     $count = (int) $args['custom_query']->max_num_pages;
     $page  = intval( get_query_var( 'paged' ) );
     $ceil  = ceil( $args['range'] / 2 );
-    
+
     if ( $count <= 1 )
         return FALSE;
-    
+
     if ( !$page )
         $page = 1;
-    
+
     if ( $count > $args['range'] ) {
         if ( $page <= $args['range'] ) {
             $min = 1;
@@ -195,14 +254,14 @@ function jobbrs_pagination( $args = array() ) {
         $min = 1;
         $max = $count;
     }
-    
+
     $echo = '';
     $previous = intval($page) - 1;
     $previous = esc_attr( get_pagenum_link($previous) );
-    
+
     if ( $previous && (1 != $page) )
-        $echo .= '<li><a href="' . $previous . '" title="' . __( 'previous', 'jobbrs') . '">' . $args['previous_string'] . '</a></li>';
-    
+        $echo .= '<li><a href="' . $previous . '" title="' . __( 'previous', 'jobbrschildtheme') . '">' . $args['previous_string'] . '</a></li>';
+
     if ( !empty($min) && !empty($max) ) {
         for( $i = $min; $i <= $max; $i++ ) {
             if ($page == $i) {
@@ -212,12 +271,12 @@ function jobbrs_pagination( $args = array() ) {
             }
         }
     }
-    
+
     $next = intval($page) + 1;
     $next = esc_attr( get_pagenum_link($next) );
     if ($next && ($count != $page) )
-        $echo .= '<li><a href="' . $next . '" title="' . __( 'next', 'jobbrs') . '">' . $args['next_string'] . '</a></li>';
-    
+        $echo .= '<li><a href="' . $next . '" title="' . __( 'next', 'jobbrschildtheme') . '">' . $args['next_string'] . '</a></li>';
+
     if ( isset($echo) )
         echo $args['before_output'] . $echo . $args['after_output'];
 }
@@ -225,15 +284,15 @@ function jobbrs_pagination( $args = array() ) {
 /**
  *  Widget area
 **/
-function jobbrs_widgets_init() {
+function jobbrschildtheme_widgets_init() {
 	register_sidebar( array(
-		'name'          => esc_html__( 'Sidebar', 'jobbrs' ),
+		'name'          => esc_html__( 'Sidebar', 'jobbrschildtheme' ),
 		'id'            => 'sidebar-area',
-		'description'   => esc_html__( 'Add widgets here.', 'jobbrs' ),
+		'description'   => esc_html__( 'Add widgets here.', 'jobbrschildtheme' ),
 		'before_widget' => '<section id="%1$s" class="widget %2$s">',
 		'after_widget'  => '</section>',
 		'before_title'  => '<h2 class="widget-title">',
 		'after_title'   => '</h2>',
 	) );
 }
-add_action( 'widgets_init', 'jobbrs_widgets_init' );
+add_action( 'widgets_init', 'jobbrschildtheme_widgets_init' );
