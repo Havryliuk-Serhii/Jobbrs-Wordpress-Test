@@ -19,7 +19,9 @@
             <!--[if lt IE 9]>
             <script src="<?php echo esc_url(get_template_directory_uri()); ?>/js/html5.js"></script>
             <![endif]-->
-        <?php wp_head(); ?>
+        <?php
+$custom_page_title = get_the_title( get_option('page_for_posts', true) );
+        wp_head(); ?>
     </head>
     <body <?php body_class(); ?>>
         <header class="header" role="banner">
@@ -47,7 +49,7 @@
                 <img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/img/hero.png" alt="header background">
                 <div class="page-title position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center">
                     <div class="col-md-5 p-lg-5 mx-auto my-5">
-                        <h1 class="font-weight-normal"><?php echo wp_get_document_title(); ?></h1>
+                        <h1 class="font-weight-normal"><?php single_post_title(); ?></h1>
                         <p class="lead font-weight-normal"><?php echo $page_description; ?></p>
                     </div>
                 </div>

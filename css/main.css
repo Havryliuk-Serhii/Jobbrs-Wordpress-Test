@@ -100,6 +100,17 @@ main{
 	justify-content: flex-start;
 	align-items: center;
 }
+span.byline img {
+height: 30px;
+width: 30px;
+display: inline-block;
+vertical-align: middle;
+margin: 25px 12px 15px 0;
+
+}
+.byline img{
+	width: 100%;
+}
 .author{
 	color: #8b98a5;
 	font-size: 12px;
@@ -117,6 +128,9 @@ main{
 	flex-direction: row;
 	border-bottom: 1px solid #e1e5eb;
 }
+.post-content p{
+	padding-top: 12px;
+}
 .read-more{
 	font-size: 16px;
 	font-weight: bold;
@@ -129,49 +143,32 @@ main{
 	justify-content: flex-end;
 	margin-left: 42px;
 }
-
+.not-found{
+	width: 100%;
+	height: 100vh;
+}
 /********************
 	Pagination
 ********************/
-.section-pagination{
-margin-top: 20px;
-}
-.title-hidden{
-	display: none;
-}
 .pagination{
-	display: -webkit-flex;
-	display: -moz-flex;
-	display: -ms-flex;
-	display: -o-flex;
-	display: flex;
-	-webkit-flex-direction: row;
-	-moz-flex-direction: row;
-	-ms-flex-direction: row;
-	-o-flex-direction: row;
-	flex-direction: row;
-	justify-content: flex-end;
+	margin-top: 20px;
 }
-.pagination li{
-	margin: 5px;
-}
-.pagination li>a{
+.pagination a{
+	margin: 0 6px;
 	font-size: 14px;
 	color: #000;
 	text-decoration: none;
+	text-transform: uppercase;
 }
-.pagination li>a:hover{
+.pagination a:hover{
 	color: #85fdc8;
 	font-size: 14px;
 }
-.pagination li>a: active{
+.pagination span{
 	color: #85fdc8;
 	font-size: 14px;
 }
-li .active{
-	color: #85fdc8;
-	font-size: 14px;
-}
+
 
 /********************
 	Widget

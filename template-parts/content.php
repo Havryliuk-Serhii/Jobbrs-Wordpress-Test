@@ -12,11 +12,14 @@
 		endif;
 	?>
 	<div class="post-head">
-		
+		<span class="byline">
+			<img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/img/avatar.png" alt="">
+		</span>
 		<span class="author"><?php the_author(); ?></span>
 	</div>
     <div class="post-content">
       	<?php the_excerpt(); ?>
+
 	<?php if ( '' !== get_the_post_thumbnail() && ! is_single() ) : ?>
 		<div class="post-thumbnail">
 			<a href="<?php the_permalink(); ?>">

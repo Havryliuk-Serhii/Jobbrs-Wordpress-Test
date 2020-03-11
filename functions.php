@@ -1,10 +1,10 @@
 <?php
 show_admin_bar(false);
-if ( ! function_exists( 'jobbrschildtheme_setup' ) ) :
-	function jobbrschildtheme_setup() {
+if ( ! function_exists( 'jobbrs_setup' ) ) :
+	function jobbrs_setup() {
 		add_theme_support( 'post-thumbnails' );
 		register_nav_menus( array(
-			'primary' => esc_html__( 'Primary', 'jobbrschildtheme' ),
+			'primary' => esc_html__( 'Primary', 'jobbrs' ),
 		) );
 		add_theme_support( 'html5', array(
 			'search-form',
@@ -15,13 +15,13 @@ if ( ! function_exists( 'jobbrschildtheme_setup' ) ) :
 		) );
 	}
 endif;
-add_action( 'after_setup_theme', 'jobbrschildtheme_setup' );
+add_action( 'after_setup_theme', 'jobbrs_setup' );
 
 /**
   *	Add styles and scripts
 **/
-add_action( 'wp_enqueue_scripts', 'jobbrschildtheme_scripts' );
-function jobbrschildtheme_scripts() {
+add_action( 'wp_enqueue_scripts', 'jobbrs_scripts' );
+function jobbrs_scripts() {
     // Load our main stylesheet.
     $parent_style = 'parent-style';
     wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );
@@ -40,33 +40,9 @@ function jobbrschildtheme_scripts() {
 /**
   *	Add custom post type "News"
 **/
-add_action( 'init', 'jobbrschildtheme_post_type' );
-function jobbrschildtheme_post_type() {
-	register_taxonomy('newscat', array('news'), array(
-		'label'                 => 'News category',
-		'labels'                => array(
-			'name'              => 'News categories',
-			'singular_name'     => 'News category',
-			'search_items'      => 'Search news category',
-			'all_items'         => 'All news categories',
-			'parent_item'       => 'Parent news category',
-			'parent_item_colon' => 'Parent news category:',
-			'edit_item'         => 'Edit news category',
-			'update_item'       => 'Update news category',
-			'add_new_item'      => 'Add news category',
-			'new_item_name'     => 'New news category',
-			'menu_name'         => 'News category',
-		),
-		'description'           => 'News category headings',
-		'public'                => true,
-		'show_in_nav_menus'     => false,
-		'show_ui'               => true,
-		'show_tagcloud'         => false,
-		'hierarchical'          => true,
-		'rewrite'               => array('slug'=>'news', 'hierarchical'=>false, 'with_front'=>false, 'feed'=>false ),
-		'show_admin_column'     => true,
-	) );
-	register_post_type('news', array(
+add_action( 'init', 'jobbrs_post_type' );
+function jobbrs_post_type() {
+		register_post_type('news', array(
 		'label'               => 'News',
 		'labels'              => array(
 			'name'          => 'News',
@@ -95,20 +71,9 @@ function jobbrschildtheme_post_type() {
 		'rewrite'             => array( 'slug'=>'news/%newscat%', 'with_front'=>false, 'pages'=>false, 'feeds'=>false, 'feed'=>false ),
 		'has_archive'         => 'news',
 		'query_var'           => true,
-		'supports'            => array( 'title','editor','author','thumbnail','comments', 'page-attributes', 'post-formats' ),
-		'taxonomies'          => array( 'newscat' ),
+		'supports'            => array( 'title','editor','thumbnail', 'post-formats' ),
+
 	) );
-}
-add_filter('post_type_link', 'news_permalink', 1, 2);
-function news_permalink( $permalink, $post ){
-	if( strpos($permalink, '%newscat%') === false )
-		return $permalink;
-	$terms = get_the_terms($post, 'newscat');
-	if( ! is_wp_error($terms) && !empty($terms) && is_object($terms[0]) )
-		$term_slug = array_pop($terms)->slug;
-		else
-		$term_slug = 'no-newscat';
-	return str_replace('%newscat%', $term_slug, $permalink );
 }
 
 /**
@@ -189,14 +154,14 @@ function filter_menu_id(){
     return;
 }
 /**
- * Delete the site name at the end of the title
+ * Page title
 **/
-add_filter( 'document_title_parts', function( $parts ){
 
-	if( isset($parts['site']) ) unset($parts['site']);
 
-	return $parts;
-});
+/**
+ * Custom template tags for this theme.
+**/
+require get_stylesheet_directory() . '/inc/template-tags.php';
 
 /**
  * Custom link 'Read More'
@@ -210,89 +175,33 @@ function new_excerpt_more( $more ){
 /**
  *  Pagination
 **/
-function jobbrschildtheme_pagination( $args = array() ) {
+if ( ! function_exists( 'post_pagination' ) ) :
+   function post_pagination() {
+     global $wp_query;
+     $pager = 999999999; // need an unlikely integer
 
-    $defaults = array(
-        'range'           => 4,
-        'custom_query'    => false,
-        'previous_string' => __( 'PREVIOUS', 'jobbrschildtheme' ),
-        'next_string'     => __( 'NEXT', 'jobbrschildtheme' ),
-        'before_output'   => '<div class="text-center"><ul class="pagination">',
-        'after_output'    => '</ul></div>'
-    );
-
-    $args = wp_parse_args(
-        $args,
-        apply_filters( 'jobbrschildtheme_pagination_defaults', $defaults )
-    );
-
-    $args['range'] = (int) $args['range'] - 1;
-    if ( !$args['custom_query'] )
-        $args['custom_query'] = @$GLOBALS['wp_query'];
-    $count = (int) $args['custom_query']->max_num_pages;
-    $page  = intval( get_query_var( 'paged' ) );
-    $ceil  = ceil( $args['range'] / 2 );
-
-    if ( $count <= 1 )
-        return FALSE;
-
-    if ( !$page )
-        $page = 1;
-
-    if ( $count > $args['range'] ) {
-        if ( $page <= $args['range'] ) {
-            $min = 1;
-            $max = $args['range'] + 1;
-        } elseif ( $page >= ($count - $ceil) ) {
-            $min = $count - $args['range'];
-            $max = $count;
-        } elseif ( $page >= $args['range'] && $page < ($count - $ceil) ) {
-            $min = $page - $ceil;
-            $max = $page + $ceil;
-        }
-    } else {
-        $min = 1;
-        $max = $count;
-    }
-
-    $echo = '';
-    $previous = intval($page) - 1;
-    $previous = esc_attr( get_pagenum_link($previous) );
-
-    if ( $previous && (1 != $page) )
-        $echo .= '<li><a href="' . $previous . '" title="' . __( 'previous', 'jobbrschildtheme') . '">' . $args['previous_string'] . '</a></li>';
-
-    if ( !empty($min) && !empty($max) ) {
-        for( $i = $min; $i <= $max; $i++ ) {
-            if ($page == $i) {
-                $echo .= '<li class="active"><span class="active">' . str_pad( (int)$i, 1, '0', STR_PAD_LEFT ) . '</span></li>';
-            } else {
-                $echo .= sprintf( '<li><a href="%s">%2d</a></li>', esc_attr( get_pagenum_link($i) ), $i );
-            }
-        }
-    }
-
-    $next = intval($page) + 1;
-    $next = esc_attr( get_pagenum_link($next) );
-    if ($next && ($count != $page) )
-        $echo .= '<li><a href="' . $next . '" title="' . __( 'next', 'jobbrschildtheme') . '">' . $args['next_string'] . '</a></li>';
-
-    if ( isset($echo) )
-        echo $args['before_output'] . $echo . $args['after_output'];
-}
-
+        echo paginate_links( array(
+             'base' => str_replace( $pager, '%#%', esc_url( get_pagenum_link( $pager ) ) ),
+             'format' => '?paged=%#%',
+						 'prev_text'    => esc_html__('Previous'),
+						 'next_text'    => esc_html__('Next'),
+             'current' => max( 1, get_query_var('paged') ),
+             'total' => $wp_query->max_num_pages
+        ) );
+   }
+endif;
 /**
  *  Widget area
 **/
-function jobbrschildtheme_widgets_init() {
+function jobbrs_widgets_init() {
 	register_sidebar( array(
-		'name'          => esc_html__( 'Sidebar', 'jobbrschildtheme' ),
+		'name'          => esc_html__( 'Sidebar', 'jobbr' ),
 		'id'            => 'sidebar-area',
-		'description'   => esc_html__( 'Add widgets here.', 'jobbrschildtheme' ),
+		'description'   => esc_html__( 'Add widgets here.', 'jobbrs' ),
 		'before_widget' => '<section id="%1$s" class="widget %2$s">',
 		'after_widget'  => '</section>',
 		'before_title'  => '<h2 class="widget-title">',
 		'after_title'   => '</h2>',
 	) );
 }
-add_action( 'widgets_init', 'jobbrschildtheme_widgets_init' );
+add_action( 'widgets_init', 'jobbrs_widgets_init' );

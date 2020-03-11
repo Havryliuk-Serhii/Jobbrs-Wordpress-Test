@@ -5,13 +5,19 @@ Template Name: Page News
 get_header(); ?>
   <div class="col-lg-8 col-md-8 col-sm-12 col-12">
     <article class="content">
-      <?php $news = new WP_Query(array('post_type' => 'news', 'order' => 'ASC')) ?>
-      <?php if ( $news->have_posts() ) : ?>
-      	   <?php while ( $news->have_posts() ) : $news->the_post(); ?>
+      <?php $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+      query_posts(array(
+          'post_type' => 'news',
+          'paged' => $paged,
+          'posts_per_page' => 2
+)); ?>
+      <?php if ( have_posts() ) :  while ( have_posts() ) : the_post();  ?>
              <section id="post-<?php the_ID(); ?>" <?php post_class('post'); ?>>
                <h2 class="post-title"><a href="<?php  esc_url( the_permalink()) ;?>" rel="bookmark"><?php the_title( ) ?></a></h2>
                <div class="post-head">
-
+                  <span class="byline">
+                    <img src="<?php echo esc_url( get_stylesheet_directory_uri() ); ?>/img/avatar.png" alt="">
+                  </span>
              		  <span class="author"><?php the_author(); ?></span>
              	 </div>
                <div class="post-content">
@@ -25,16 +31,15 @@ get_header(); ?>
            	     <?php endif; ?>
                </div>
            </section>
-      <?php endwhile;  wp_reset_postdata();?>
-      <section class="section-pagination">
-          <h3 class="title-hidden"><?php esc_html_e('Pagination','jobbrschildtheme' ) ?></h3>
-          <nav aria-label="page navigation">
-                <?php jobbrschildtheme_pagination(); ?>
-              </nav>
-        </section>
-      <?php else: ?>
-        <?php esc_html_e('No posts found.','jobbrschildtheme' ) ?>
-      <?php endif; ?>
+
+         <?php endwhile;?>
+         <nav aria-label="page navigation" class="pagination justify-content-end"">
+               <?php post_pagination(); ?>
+         </nav>
+              <?php  else:
+                  esc_html_e('No posts found.','jobbrs' );
+                endif;
+          ?>
     </article>
   </div>
 <?php get_sidebar();
