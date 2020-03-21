@@ -5,7 +5,7 @@
         while ( have_posts() ) : the_post();
           get_template_part( 'template-parts/content', get_post_type() );
         endwhile; ?>
-        <nav aria-label="page navigation" class="pagination justify-content-end"">
+        <nav aria-label="page navigation" class="pagination justify-content-end">
               <?php post_pagination(); ?>
             </nav>
         <?php else :
